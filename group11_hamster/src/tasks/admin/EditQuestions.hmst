@@ -4,19 +4,19 @@
         <task copy="false" id="t1" type="abstract">
             <graphics>
                 <graphic folded="false">
-                    <position x="214" y="36"/>
+                    <position x="211" y="36"/>
                 </graphic>
             </graphics>
-            <operator id="o1" type="enable" knowledgeproceduraltype="">
+            <operator id="o4" type="enable" knowledgeproceduraltype="">
                 <graphics>
                     <graphic>
-                        <position x="234" y="168"/>
+                        <position x="236" y="158"/>
                     </graphic>
                 </graphics>
                 <task copy="false" id="t2" type="abstractuser" knowledgeproceduraltype="">
                     <graphics>
                         <graphic folded="false">
-                            <position x="22" y="260"/>
+                            <position x="-37" y="260"/>
                         </graphic>
                     </graphics>
                     <description>Login</description>
@@ -40,97 +40,70 @@
                         </categories>
                     </coreproperties>
                 </task>
-                <task copy="false" id="t3" type="abstractuser" knowledgeproceduraltype="">
+                <task copy="false" id="t11" type="cognitive_decision" knowledgeproceduraltype="">
                     <graphics>
                         <graphic folded="false">
-                            <position x="212" y="260"/>
+                            <position x="168" y="260"/>
                         </graphic>
                     </graphics>
-                    <operator id="o2" type="enable" knowledgeproceduraltype="">
+                    <operator id="o5" type="choice" knowledgeproceduraltype="">
                         <graphics>
                             <graphic>
-<position x="236" y="423"/>
+<position x="236" y="355"/>
                             </graphic>
                         </graphics>
-                        <task copy="false" id="t4" type="cognitive_decision" knowledgeproceduraltype="">
+                        <task copy="false" structuration_link="Edit topic" id="t12" type="subroutine" knowledgeproceduraltype="">
                             <graphics>
 <graphic folded="false">
-    <position x="72" y="466"/>
+    <position x="-123" y="422"/>
 </graphic>
                             </graphics>
-                            <operator id="o3" type="choice" knowledgeproceduraltype="">
+                            <description>Edit topic</description>
+                            <xlproperties/>
+                            <coreproperties>
+<categories>
+    <category name="simulation">
+        <property name="duration" value="false"/>
+        <property name="iterative" value="0"/>
+        <property name="optional" value="false"/>
+        <property name="minexectime" value="0"/>
+        <property name="maxexectime" value="0"/>
+    </category>
+    <category name="authority">
+        <property name="responsibility" type="java.lang.Boolean" value="false"/>
+        <property name="authority" type="java.lang.Boolean" value="false"/>
+    </category>
+    <category name="criticality">
+        <property name="criticality" type="java.lang.Integer" value="0"/>
+    </category>
+</categories>
+                            </coreproperties>
+                        </task>
+                        <task copy="false" id="t13" type="abstractuser" knowledgeproceduraltype="">
+                            <graphics>
+<graphic folded="false">
+    <position x="215" y="422"/>
+</graphic>
+                            </graphics>
+                            <operator id="o6" type="enable" knowledgeproceduraltype="">
 <graphics>
     <graphic>
-        <position x="121" y="572"/>
+        <position x="236" y="524"/>
     </graphic>
 </graphics>
-<task copy="false" id="t5" type="abstractuser" knowledgeproceduraltype="">
+<task copy="false" structuration_link="CUD decisionInstance2" id="t15" type="component" knowledgeproceduraltype="">
     <graphics>
         <graphic folded="false">
-            <position x="-22" y="633"/>
+            <position x="205" y="605"/>
         </graphic>
     </graphics>
-    <description>Edit</description>
+    <description>CUD decision</description>
     <xlproperties/>
     <coreproperties>
         <categories>
             <category name="simulation">
                 <property name="duration" value="false"/>
-                <property name="iterative" value="0"/>
-                <property name="optional" value="false"/>
-                <property name="minexectime" value="0"/>
-                <property name="maxexectime" value="0"/>
-            </category>
-            <category name="authority">
-                <property name="responsibility" type="java.lang.Boolean" value="false"/>
-                <property name="authority" type="java.lang.Boolean" value="false"/>
-            </category>
-            <category name="criticality">
-                <property name="criticality" type="java.lang.Integer" value="0"/>
-            </category>
-        </categories>
-    </coreproperties>
-</task>
-<task copy="false" id="t6" type="abstractuser" knowledgeproceduraltype="">
-    <graphics>
-        <graphic folded="false">
-            <position x="115" y="633"/>
-        </graphic>
-    </graphics>
-    <description>Create</description>
-    <xlproperties/>
-    <coreproperties>
-        <categories>
-            <category name="simulation">
-                <property name="duration" value="false"/>
-                <property name="iterative" value="0"/>
-                <property name="optional" value="false"/>
-                <property name="minexectime" value="0"/>
-                <property name="maxexectime" value="0"/>
-            </category>
-            <category name="authority">
-                <property name="responsibility" type="java.lang.Boolean" value="false"/>
-                <property name="authority" type="java.lang.Boolean" value="false"/>
-            </category>
-            <category name="criticality">
-                <property name="criticality" type="java.lang.Integer" value="0"/>
-            </category>
-        </categories>
-    </coreproperties>
-</task>
-<task copy="false" id="t9" type="abstractuser" knowledgeproceduraltype="">
-    <graphics>
-        <graphic folded="false">
-            <position x="257" y="633"/>
-        </graphic>
-    </graphics>
-    <description>Delete</description>
-    <xlproperties/>
-    <coreproperties>
-        <categories>
-            <category name="simulation">
-                <property name="duration" value="false"/>
-                <property name="iterative" value="0"/>
+                <property name="iterative" value="*"/>
                 <property name="optional" value="false"/>
                 <property name="minexectime" value="0"/>
                 <property name="maxexectime" value="0"/>
@@ -146,7 +119,68 @@
     </coreproperties>
 </task>
                             </operator>
-                            <description>Cognitive Decision Task1</description>
+                            <description>Edit Questions</description>
+                            <xlproperties/>
+                            <coreproperties>
+<categories>
+    <category name="simulation">
+        <property name="duration" value="false"/>
+        <property name="iterative" value="0"/>
+        <property name="optional" value="false"/>
+        <property name="minexectime" value="0"/>
+        <property name="maxexectime" value="0"/>
+    </category>
+    <category name="authority">
+        <property name="responsibility" type="java.lang.Boolean" value="false"/>
+        <property name="authority" type="java.lang.Boolean" value="false"/>
+    </category>
+    <category name="criticality">
+        <property name="criticality" type="java.lang.Integer" value="0"/>
+    </category>
+</categories>
+                            </coreproperties>
+                        </task>
+                        <task copy="false" id="t14" type="abstractuser" knowledgeproceduraltype="">
+                            <graphics>
+<graphic folded="false">
+    <position x="464" y="422"/>
+</graphic>
+                            </graphics>
+                            <operator id="o7" type="enable" knowledgeproceduraltype="">
+<graphics>
+    <graphic>
+        <position x="481" y="524"/>
+    </graphic>
+</graphics>
+<task copy="false" structuration_link="CUD decisionInstance3" id="t16" type="component" knowledgeproceduraltype="">
+    <graphics>
+        <graphic folded="false">
+            <position x="451" y="605"/>
+        </graphic>
+    </graphics>
+    <description>CUD decision</description>
+    <xlproperties/>
+    <coreproperties>
+        <categories>
+            <category name="simulation">
+                <property name="duration" value="false"/>
+                <property name="iterative" value="*"/>
+                <property name="optional" value="false"/>
+                <property name="minexectime" value="0"/>
+                <property name="maxexectime" value="0"/>
+            </category>
+            <category name="authority">
+                <property name="responsibility" type="java.lang.Boolean" value="false"/>
+                <property name="authority" type="java.lang.Boolean" value="false"/>
+            </category>
+            <category name="criticality">
+                <property name="criticality" type="java.lang.Integer" value="0"/>
+            </category>
+        </categories>
+    </coreproperties>
+</task>
+                            </operator>
+                            <description>Edit answers</description>
                             <xlproperties/>
                             <coreproperties>
 <categories>
@@ -168,7 +202,7 @@
                             </coreproperties>
                         </task>
                     </operator>
-                    <description>Make/Edit Topic</description>
+                    <description>Decide what kind of object to edit</description>
                     <xlproperties/>
                     <coreproperties>
                         <categories>
@@ -192,7 +226,7 @@
                 <task copy="false" id="t8" type="abstractuser" knowledgeproceduraltype="">
                     <graphics>
                         <graphic folded="false">
-                            <position x="396" y="260"/>
+                            <position x="398" y="260"/>
                         </graphic>
                     </graphics>
                     <description>Save</description>
@@ -219,10 +253,10 @@
                 <task copy="false" id="t10" type="abstractuser" knowledgeproceduraltype="">
                     <graphics>
                         <graphic folded="false">
-                            <position x="535" y="260"/>
+                            <position x="553" y="260"/>
                         </graphic>
                     </graphics>
-                    <description>Logout</description>
+                    <description>Logout/Exit</description>
                     <xlproperties/>
                     <coreproperties>
                         <categories>
@@ -244,7 +278,7 @@
                     </coreproperties>
                 </task>
             </operator>
-            <description>EditQuestions</description>
+            <description>Edit Game Data</description>
             <xlproperties/>
             <coreproperties>
                 <categories>
