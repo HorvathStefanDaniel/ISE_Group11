@@ -276,7 +276,7 @@
                         <categories>
                             <category name="simulation">
 <property name="duration" value="false"/>
-<property name="iterative" value="0"/>
+<property name="iterative" value="*"/>
 <property name="optional" value="false"/>
 <property name="minexectime" value="0"/>
 <property name="maxexectime" value="0"/>
