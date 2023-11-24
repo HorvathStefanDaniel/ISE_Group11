@@ -96,7 +96,7 @@ def create_main_menu():
     ############## BUTTONS ##############
 
     # Get a segment of the tiled background that matches the size needed for the button frame
-    button_frame_width = screen_width - 100  # Adjust the width as needed
+    button_frame_width = screen_width  # Adjust the width as needed
     button_frame_height = 300  # Adjust the height as needed, enough to contain all buttons
     bg_segment = get_tiled_background_segment('background.png', (button_frame_width, button_frame_height))
 
