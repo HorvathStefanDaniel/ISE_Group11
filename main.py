@@ -1,5 +1,5 @@
 # main.py
-
+import sqlite3
 import tkinter as tk
 from PIL import Image, ImageDraw, ImageTk  # For adding images
 from how_to_play import HowToPlay
@@ -10,6 +10,41 @@ from play_game import play_game_window  # make sure to import the play_game_wind
 
 # Define a larger font for the buttons
 button_font = ('Arial', 20, 'bold')
+
+DATABASE = 'quiz_game.db'
+
+##### FOR TESTING #####
+
+def execute_db_query(query, parameters=(), fetchall=False, commit=False):
+    """
+    Execute a database query.
+
+    :param query: SQL query string.
+    :param parameters: Tuple of parameters for the SQL query.
+    :param fetchall: If True, fetches all rows from the query result.
+    :param commit: If True, commits the transaction.
+    :return: Query result if fetchall is True or lastrowid if commit is True.
+    """
+    with sqlite3.connect(DATABASE) as conn:
+        cursor = conn.cursor()
+        cursor.execute(query, parameters)
+        if commit:
+            conn.commit()
+            return cursor.lastrowid
+        if fetchall:
+            return cursor.fetchall()
+        return cursor.fetchone()
+
+# Example usage of execute_db_query
+def load_topics_from_db():
+    """
+    Load topics from the database.
+    
+    :return: List of topic tuples.
+    """
+    return execute_db_query("SELECT * FROM Topics", fetchall=True)
+
+##### END FOR TESTING #####
 
 def create_rounded_button(canvas, x, y, width, height, corner_radius, text, command):
     # Create a rounded rectangle
@@ -158,7 +193,7 @@ def show_game():
         widget.destroy()
     
     # Start the game and pass the function to return to main menu after game ends
-    play_game_window(root, show_main_menu)
+    play_game_window(root, show_main_menu, DATABASE)
 
 root = tk.Tk()
 
@@ -171,6 +206,6 @@ set_background_image()  # Set the background image
 create_main_menu()  # Start with the main menu
 
 # Call the init_db function to initialize the database at startup
-init_db() #name of the database is quiz_game.db
+init_db(DATABASE) #name of the database is quiz_game.db
 
 root.mainloop()

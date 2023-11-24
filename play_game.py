@@ -225,6 +225,7 @@ class Game:
         messagebox.showinfo("Game Over", f"Final scores:\n{score_messages}")
         self.on_main_menu()  # Call the passed in function to show the main menu
 
-def play_game_window(root, on_main_menu):
+def play_game_window(root, on_main_menu, db_path='quiz_game.db'):
+    DATABASE = db_path
     # This will create a new instance of the game setup
     game_setup = GameSetup(root, on_game_start=lambda topics, players: Game(root, on_main_menu, topics, players), on_main_menu=on_main_menu)

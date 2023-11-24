@@ -1,8 +1,8 @@
 import sqlite3
 
-def init_db():
+def init_db(db_path='quiz_game.db'):
     # Connect to SQLite database (or create it if it doesn't exist)
-    conn = sqlite3.connect('quiz_game.db')
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
     # SQL to create tables
