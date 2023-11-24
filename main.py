@@ -1,14 +1,41 @@
 # main.py
 
 import tkinter as tk
-from tkinter import PhotoImage  # For adding images
-from PIL import Image, ImageTk  # For resizing images
+from PIL import Image, ImageDraw, ImageTk  # For adding images
 from how_to_play import HowToPlay
 from initDb import init_db
 from edit_questions import edit_questions_window
 
 # Define a larger font for the buttons
 button_font = ('Arial', 20, 'bold')
+
+def add_vignette(image, edge_transparency=128, edge_width_ratio=0.1):
+    width, height = image.size
+    edge_width = min(width, height) * edge_width_ratio  # Define the width of the edge
+
+    # Create a radial gradient mask
+    mask = Image.new("L", (width, height), 255)  # Start with a fully opaque mask
+    draw = ImageDraw.Draw(mask)
+
+    max_radius = int(min(width, height) / 2)
+    for i in range(max_radius, 0, -1):  # Start from the outside of the ellipse
+        # Calculate fill value: it should start from `edge_transparency` and go to 0
+        if max_radius - i < edge_width:
+            fill_value = int((1 - ((max_radius - i) / edge_width)) * edge_transparency)
+        else:
+            fill_value = edge_transparency  # Maintain edge transparency until it reaches the edge_width
+
+        # Draw the ellipse from larger to smaller
+        draw.ellipse(
+            (width / 2 - i, height / 2 - i, width / 2 + i, height / 2 + i),
+            fill=fill_value
+        )
+
+    # Apply the mask to the alpha channel of the image
+    image.putalpha(mask)
+
+    return image
+
 
 def show_game():
     print("Show game")
@@ -52,9 +79,12 @@ def create_main_menu():
     logo_size = min(200, screen_width // 5, screen_width // 5)
 
     # Open the logo with PIL
-    original_logo = Image.open('quizLogo.png')  # Replace 'quizLogo.png' with your actual logo file path
-    resized_logo = original_logo.resize((logo_size, logo_size), Image.Resampling.LANCZOS)  # Use Image.LANCZOS for older versions
-    logo = ImageTk.PhotoImage(resized_logo)
+    original_logo = Image.open('quizLogo.png').convert("RGBA")
+    resized_logo = original_logo.resize((logo_size, logo_size), Image.Resampling.LANCZOS)
+
+    # Add a vignette to the resized logo
+    vignette_logo = add_vignette(resized_logo, 255, 0.1)
+    logo = ImageTk.PhotoImage(vignette_logo)
 
     # Add the logo image to the Label
     logo_label = tk.Label(root, image=logo)
