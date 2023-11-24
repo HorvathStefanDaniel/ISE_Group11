@@ -5,7 +5,8 @@ from PIL import Image, ImageDraw, ImageTk  # For adding images
 from how_to_play import HowToPlay
 from initDb import init_db
 from edit_questions import edit_questions_window
-from play_game import play_game_window
+from play_game import play_game_window  # make sure to import the play_game_window function
+
 
 # Define a larger font for the buttons
 button_font = ('Arial', 20, 'bold')
@@ -37,9 +38,6 @@ def get_tiled_background_segment(bg_image_path, segment_size, offset=(0, 0)):
             tiled_bg.paste(background_image, (x, y))
 
     return tiled_bg
-
-def show_game():
-    edit_window = play_game_window(root)
 
 def show_main_menu():
     # Clear the window
@@ -153,6 +151,14 @@ def show_how_to_play():
 
     # Create the How to Play page
     HowToPlay(root, images, show_main_menu)
+
+def show_game():
+    # Clear the window or hide the current window
+    for widget in root.winfo_children():
+        widget.destroy()
+    
+    # Start the game and pass the function to return to main menu after game ends
+    play_game_window(root, show_main_menu)
 
 root = tk.Tk()
 

@@ -166,7 +166,6 @@ def edit_questions_window(main_root):
                     # Two indents and a ↳ for answers
                     tree.insert(question_node, 'end', iid=f"answer_{answer_id}", values=(answer_id, '       ' + '↳ ' + answer_text + ' (' + correct_text + ')', 'Answer'))
 
-# ... (rest of the previous code remains unchanged)
 
     # Create a top-level window
     edit_window = tk.Toplevel(main_root)
