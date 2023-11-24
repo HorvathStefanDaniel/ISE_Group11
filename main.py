@@ -9,33 +9,18 @@ from edit_questions import edit_questions_window
 # Define a larger font for the buttons
 button_font = ('Arial', 20, 'bold')
 
-def add_vignette(image, edge_transparency=128, edge_width_ratio=0.1):
-    width, height = image.size
-    edge_width = min(width, height) * edge_width_ratio  # Define the width of the edge
+def get_tiled_background_segment(bg_image_path, segment_size, offset=(0, 0)):
+    # Ensure to use the global variables
+    global bg_width, bg_height
+    # Load and tile the background image
+    background_image = Image.open(bg_image_path)
+    tiled_bg = Image.new('RGB', segment_size)
 
-    # Create a radial gradient mask
-    mask = Image.new("L", (width, height), 255)  # Start with a fully opaque mask
-    draw = ImageDraw.Draw(mask)
+    for x in range(-offset[0], segment_size[0], bg_width):
+        for y in range(-offset[1], segment_size[1], bg_height):
+            tiled_bg.paste(background_image, (x, y))
 
-    max_radius = int(min(width, height) / 2)
-    for i in range(max_radius, 0, -1):  # Start from the outside of the ellipse
-        # Calculate fill value: it should start from `edge_transparency` and go to 0
-        if max_radius - i < edge_width:
-            fill_value = int((1 - ((max_radius - i) / edge_width)) * edge_transparency)
-        else:
-            fill_value = edge_transparency  # Maintain edge transparency until it reaches the edge_width
-
-        # Draw the ellipse from larger to smaller
-        draw.ellipse(
-            (width / 2 - i, height / 2 - i, width / 2 + i, height / 2 + i),
-            fill=fill_value
-        )
-
-    # Apply the mask to the alpha channel of the image
-    image.putalpha(mask)
-
-    return image
-
+    return tiled_bg
 
 def show_game():
     print("Show game")
@@ -53,59 +38,94 @@ def edit_questions():
     edit_window = edit_questions_window(root)
 
 def set_background_image():
+    global bg_width, bg_height
     # Load the background image
     background_image = Image.open('background.png')  # Replace 'background.png' with your actual file path
-    # Convert the image to a PhotoImage
-    tk_background_image = ImageTk.PhotoImage(background_image)
+    bg_width, bg_height = background_image.size
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    
+    # Create a new image for the tiled background
+    tiled_bg = Image.new('RGB', (screen_width, screen_height))
+    
+    for x in range(0, screen_width, bg_width):
+        for y in range(0, screen_height, bg_height):
+            tiled_bg.paste(background_image, (x, y))
 
-    # Calculate how many times to tile the image
-    num_tiles_x = root.winfo_screenwidth() // tk_background_image.width() + 1
-    num_tiles_y = root.winfo_screenheight() // tk_background_image.height() + 1
+    tk_tiled_bg = ImageTk.PhotoImage(tiled_bg)
 
-    # Tile the image across the background
-    for x in range(num_tiles_x):
-        for y in range(num_tiles_y):
-            background_label = tk.Label(root, image=tk_background_image)
-            background_label.image = tk_background_image  # Keep a reference
-            background_label.place(x=x * tk_background_image.width(), y=y * tk_background_image.height())
-
+    # Create a label that will contain the tiled background
+    background_label = tk.Label(root, image=tk_tiled_bg)
+    background_label.place(x=0, y=0, relwidth=1, relheight=1)
+    background_label.image = tk_tiled_bg  # Keep a reference
 
 def create_main_menu():
     # Get screen width and height
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
     
-    # Calculate the size of the logo (10% of the screen or 50x50 pixels, whichever is smaller)
-    logo_size = min(200, screen_width // 5, screen_width // 5)
+    ############## LOGO ##############
 
-    # Open the logo with PIL
+    # Calculate the size of the logo (10% of the screen or 50x50 pixels, whichever is smaller)
+    logo_size = min(200, screen_width // 5, screen_height // 5)
+
+    # Calculate the position to center the logo on the screen
+    logo_x = (screen_width - logo_size) // 2
+    logo_y = (screen_height - logo_size) // 10  # Adjust vertical position as needed
+
+    # Open the logo with PIL and ensure it has an alpha layer
     original_logo = Image.open('quizLogo.png').convert("RGBA")
     resized_logo = original_logo.resize((logo_size, logo_size), Image.Resampling.LANCZOS)
 
-    # Add a vignette to the resized logo
-    vignette_logo = add_vignette(resized_logo, 255, 0.1)
-    logo = ImageTk.PhotoImage(vignette_logo)
+    # Get a segment of the tiled background that matches the logo size with the correct offset
+    bg_segment = get_tiled_background_segment('background.png', (logo_size, logo_size), (logo_x % bg_width, logo_y % bg_height))
 
-    # Add the logo image to the Label
-    logo_label = tk.Label(root, image=logo)
-    logo_label.image = logo  # Keep a reference so it's not garbage collected
-    logo_label.pack(pady=20)
-    
-    # Create a frame to hold the buttons
-    button_frame = tk.Frame(root)
-    button_frame.pack(pady=40)  # Increase the spacing from the logo
+    # Composite the vignette logo over the background segment
+    combined_logo = Image.alpha_composite(bg_segment.convert("RGBA"), resized_logo)
 
-    play_button = tk.Button(button_frame, text="PLAY", command=show_game, font=button_font, padx=20, pady=10)
-    play_button.pack(pady=20, fill='x')  # `fill='x'` makes the button expand to fill the frame
+    # Convert to a format suitable for Tkinter
+    logo = ImageTk.PhotoImage(combined_logo)
 
-    edit_questions_button = tk.Button(button_frame, text="EDIT QUESTIONS", command=edit_questions, font=button_font, padx=20, pady=10)
-    edit_questions_button.pack(pady=20, fill='x')
+    # Create a Canvas for the logo with a transparent background
+    logo_canvas = tk.Canvas(root, width=logo_size, height=logo_size, bg='green', highlightthickness=0, borderwidth=0)
+    logo_canvas.create_image((logo_size // 2, logo_size // 2), image=logo)
+    logo_canvas.image = logo  # Keep a reference so it's not garbage collected
+    logo_canvas.pack(pady=20)
 
-    how_to_play_button = tk.Button(button_frame, text="HOW TO PLAY", command=show_how_to_play, font=button_font, padx=20, pady=10)
-    how_to_play_button.pack(pady=20, fill='x')
 
-    quit_button = tk.Button(button_frame, text="QUIT", command=root.quit, font=button_font, padx=20, pady=10)
-    quit_button.pack(pady=20, fill='x')
+    ############## BUTTONS ##############
+
+    # Get a segment of the tiled background that matches the size needed for the button frame
+    button_frame_width = screen_width - 100  # Adjust the width as needed
+    button_frame_height = 300  # Adjust the height as needed, enough to contain all buttons
+    bg_segment = get_tiled_background_segment('background.png', (button_frame_width, button_frame_height))
+
+    # Convert to a format suitable for Tkinter
+    button_bg = ImageTk.PhotoImage(bg_segment)
+
+    # Create a Canvas for the buttons with the tiled background
+    button_canvas = tk.Canvas(root, width=button_frame_width, height=button_frame_height, highlightthickness=0)
+    button_canvas.create_image((button_frame_width // 2, button_frame_height // 2), image=button_bg)
+    button_canvas.image = button_bg  # Keep a reference so it's not garbage collected
+    button_canvas.pack(pady=20)
+
+    # Define the button width and height
+    button_width = 300  # Adjust to your preferred width
+    button_height = 50  # Adjust to your preferred height
+
+    # Create the buttons and use the `create_window` method to place them on the canvas
+    play_button = tk.Button(root, text="PLAY", command=show_game, font=button_font)
+    button_canvas.create_window((button_frame_width // 2, 50), window=play_button, width=button_width, height=button_height)
+
+    edit_questions_button = tk.Button(root, text="EDIT QUESTIONS", command=edit_questions, font=button_font)
+    button_canvas.create_window((button_frame_width // 2, 120), window=edit_questions_button, width=button_width, height=button_height)
+
+    how_to_play_button = tk.Button(root, text="HOW TO PLAY", command=show_how_to_play, font=button_font)
+    button_canvas.create_window((button_frame_width // 2, 190), window=how_to_play_button, width=button_width, height=button_height)
+
+    quit_button = tk.Button(root, text="QUIT", command=root.quit, font=button_font)
+    button_canvas.create_window((button_frame_width // 2, 260), window=quit_button, width=button_width, height=button_height)
+
 
 def show_how_to_play():
     # Clear the window
