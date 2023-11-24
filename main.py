@@ -5,9 +5,25 @@ from PIL import Image, ImageDraw, ImageTk  # For adding images
 from how_to_play import HowToPlay
 from initDb import init_db
 from edit_questions import edit_questions_window
+from play_game import play_game_window
 
 # Define a larger font for the buttons
 button_font = ('Arial', 20, 'bold')
+
+def create_rounded_button(canvas, x, y, width, height, corner_radius, text, command):
+    # Create a rounded rectangle
+    canvas.create_oval(x, y, x + 2 * corner_radius, y + 2 * corner_radius, fill='white', outline='')
+    canvas.create_oval(x + width - 2 * corner_radius, y, x + width, y + 2 * corner_radius, fill='white', outline='')
+    canvas.create_oval(x, y + height - 2 * corner_radius, x + 2 * corner_radius, y + height, fill='white', outline='')
+    canvas.create_oval(x + width - 2 * corner_radius, y + height - 2 * corner_radius, x + width, y + height, fill='white', outline='')
+    canvas.create_rectangle(x + corner_radius, y, x + width - corner_radius, y + height, fill='white', outline='')
+    canvas.create_rectangle(x, y + corner_radius, x + width, y + height - corner_radius, fill='white', outline='')
+    
+    # Add text to the button
+    canvas.create_text(x + width / 2, y + height / 2, text=text, font=('Arial', 20, 'bold'))
+    
+    # Bind the click event
+    canvas.tag_bind("button", "<Button-1>", lambda event: command())
 
 def get_tiled_background_segment(bg_image_path, segment_size, offset=(0, 0)):
     # Ensure to use the global variables
@@ -23,7 +39,7 @@ def get_tiled_background_segment(bg_image_path, segment_size, offset=(0, 0)):
     return tiled_bg
 
 def show_game():
-    print("Show game")
+    edit_window = play_game_window(root)
 
 def show_main_menu():
     # Clear the window
