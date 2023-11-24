@@ -4,6 +4,8 @@ import tkinter as tk
 from tkinter import PhotoImage  # For adding images
 from PIL import Image, ImageTk  # For resizing images
 from how_to_play import HowToPlay
+from initDb import init_db
+from edit_questions import edit_questions_window
 
 # Define a larger font for the buttons
 button_font = ('Arial', 20, 'bold')
@@ -16,11 +18,12 @@ def show_main_menu():
     for widget in root.winfo_children():
         widget.destroy()
 
+    set_background_image()  # Set the background image
     # Recreate the main menu
     create_main_menu()
 
 def edit_questions():
-    print("Edit questions")
+    edit_window = edit_questions_window(root)
 
 def set_background_image():
     # Load the background image
@@ -58,8 +61,6 @@ def create_main_menu():
     logo_label.image = logo  # Keep a reference so it's not garbage collected
     logo_label.pack(pady=20)
     
-    # The rest of the function remains unchanged
-    
     # Create a frame to hold the buttons
     button_frame = tk.Frame(root)
     button_frame.pack(pady=40)  # Increase the spacing from the logo
@@ -95,7 +96,9 @@ root.attributes('-fullscreen', True)
 # root.state('zoomed')
 
 set_background_image()  # Set the background image
-
 create_main_menu()  # Start with the main menu
+
+# Call the init_db function to initialize the database at startup
+init_db() #name of the database is quiz_game.db
 
 root.mainloop()
