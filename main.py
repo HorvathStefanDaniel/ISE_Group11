@@ -1,7 +1,7 @@
 # main.py
 import sqlite3
 import tkinter as tk
-from PIL import Image, ImageDraw, ImageTk  # For adding images
+from PIL import Image, ImageTk  # For adding images
 from how_to_play import HowToPlay
 from initDb import init_db
 from edit_questions import edit_questions_window
